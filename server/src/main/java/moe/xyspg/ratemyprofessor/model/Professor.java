@@ -1,19 +1,17 @@
 package moe.xyspg.ratemyprofessor.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Professor {
+
   private Long id;
   private String name;
   private String department;
-  private List<Double> ratings;
+  private Double rating;
 
-  public Professor(Long id, String name, String department, List<Double> ratings) {
+  public Professor(long id, String name, String department, double rating) {
     this.id = id;
     this.name = name;
     this.department = department;
-    this.ratings = new ArrayList<>();
+    this.rating = rating;
   }
 
   public Long getId() {
@@ -40,15 +38,11 @@ public class Professor {
     this.department = department;
   }
 
-  public List<Double> getRatings() {
-    return ratings;
+  public Double getRating() {
+    return rating;
   }
 
-  public void addRating(Double rating) {
-    this.ratings.add(rating);
-  }
-
-  public double getAverageRating() {
-    return ratings.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+  public void setRating(Double rating) {
+    this.rating = rating;
   }
 }

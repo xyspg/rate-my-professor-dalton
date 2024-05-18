@@ -3,32 +3,20 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import { FaStar } from "react-icons/fa6";
 
 
-const ProfessorList = () => {
-    const data = [
-        {
-            'name': 'Wei Sai',
-            'department': 'Mathematics',
-        },
-        {
-            'name': 'Ma Jiyun',
-            'department': 'Physics',
-        },
-        {
-            'name': 'Zhang Weibo',
-            'department': 'Biology',
+const ProfessorList = async () => {
+    const data = await fetch("http://localhost:8080/professors").then(res => res.json());
 
-        }
-    ]
     return (
-        <div className='flex flex-row gap-4'>
-            {data.map(professor => (
-                <Card key={professor.name}>
+        <div className='flex flex-row flex-wrap gap-4'>
+            {data.map((professor: any) => (
+                <Card key={professor.id}>
                     <CardHeader>
                         <CardTitle>{professor.name}</CardTitle>
                         <CardDescription>{professor.department}</CardDescription>
                     </CardHeader>
-                    <CardContent className='flex flex-row gap-1 items-center'>
-                        <FaStar /><p>5.0</p>
+                    <CardContent className='flex flex-row gap-1 items-center min-w-40'>
+                        <FaStar />
+                        <p>5.0</p>
                     </CardContent>
                 </Card>
             ))}
