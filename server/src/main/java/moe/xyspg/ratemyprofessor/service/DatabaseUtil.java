@@ -25,40 +25,7 @@ public class DatabaseUtil {
     return DriverManager.getConnection(URL, USER, PASSWORD);
   }
 
-  public static List<Professor> fetchProfessors(String query) throws SQLException {
-    List<Professor> results = new ArrayList<>();
-    try (Connection conn = getConnection();
-         PreparedStatement stmt = conn.prepareStatement(query);
-         ResultSet rs = stmt.executeQuery()) {
 
-      while (rs.next()) {
-        long id = rs.getLong("id");
-        String name = rs.getString("name");
-        String department = rs.getString("department");
-        double rating = rs.getDouble("rating");
-        results.add(new Professor(id, name, department, rating));
-      }
-    }
-
-    return results;
-  }
-
-  public static Professor getProfessor(String query) throws SQLException {
-    try (Connection conn = getConnection();
-         PreparedStatement stmt = conn.prepareStatement(query);
-         ResultSet rs = stmt.executeQuery()) {
-
-      if (rs.next()) {
-        long id = rs.getLong("id");
-        String name = rs.getString("name");
-        String department = rs.getString("department");
-        double rating = rs.getDouble("rating");
-        return new Professor(id, name, department, rating);
-      }
-    }
-
-    return null;
-  }
 
   public static int updateData(String query) throws SQLException {
     try (Connection conn = getConnection();

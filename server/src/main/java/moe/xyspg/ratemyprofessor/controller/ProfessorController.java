@@ -20,7 +20,7 @@ public class ProfessorController {
   public List<Professor> getAllProfessors() {
     String query = "SELECT * FROM professors";
     try {
-      return DatabaseUtil.fetchProfessors(query);
+      return Professor.fetchProfessors(query);
     } catch (SQLException e) {
       e.printStackTrace();
       return null;
@@ -31,7 +31,7 @@ public class ProfessorController {
   public Professor getProfessorById(@RequestParam long id) {
     String query = "SELECT * FROM professors WHERE id = " + id;
     try {
-      return DatabaseUtil.getProfessor(query);
+      return Professor.getProfessorDetailedInformation(query);
     } catch (SQLException e) {
       e.printStackTrace();
       return null;
