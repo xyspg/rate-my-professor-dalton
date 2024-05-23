@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import { FaStar } from "react-icons/fa6";
+import Link from "next/link";
 
 
 const ProfessorList = async () => {
@@ -10,6 +11,7 @@ const ProfessorList = async () => {
         <div className='flex flex-row flex-wrap gap-4'>
             {data.map((professor: any) => (
                 <Card key={professor.id}>
+                    <Link href={`/professor/${professor.id}`}>
                     <CardHeader>
                         <CardTitle>{professor.name}</CardTitle>
                         <CardDescription>{professor.department}</CardDescription>
@@ -18,6 +20,7 @@ const ProfessorList = async () => {
                         <FaStar />
                         <p>5.0</p>
                     </CardContent>
+                    </Link>
                 </Card>
             ))}
 
