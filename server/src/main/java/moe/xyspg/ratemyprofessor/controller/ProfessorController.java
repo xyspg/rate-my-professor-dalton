@@ -18,20 +18,18 @@ public class ProfessorController {
 
   @GetMapping
   public List<Professor> getAllProfessors() {
-    String query = "SELECT * FROM professors";
     try {
-      return Professor.fetchProfessors(query);
+      return Professor.fetchProfessors();
     } catch (SQLException e) {
       e.printStackTrace();
       return null;
     }
   }
 
-  @GetMapping("/getById")
+  @GetMapping(value = "/getById", produces = "application/json")
   public Professor getProfessorById(@RequestParam long id) {
-    String query = "SELECT * FROM professors WHERE id = " + id;
     try {
-      return Professor.getProfessorDetailedInformation(query);
+      return Professor.getProfessorDetailedInformation(id);
     } catch (SQLException e) {
       e.printStackTrace();
       return null;
