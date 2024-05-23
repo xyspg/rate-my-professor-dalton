@@ -1,13 +1,11 @@
 package moe.xyspg.ratemyprofessor.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import moe.xyspg.ratemyprofessor.service.DatabaseUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Professor {
 
   private Long id;
@@ -15,6 +13,7 @@ public class Professor {
   private String department;
   private double rating;
   private List<Rating> ratings;
+  private List<Professor> professorsInOtherDepartments;
 
   public Professor(long id, String name, String department) {
     this.id = id;
@@ -66,19 +65,42 @@ public class Professor {
           String name = rs.getString("name");
           String department = rs.getString("department");
           professor = new Professor(profId, name, department);
-          System.out.println(professor);
+//          System.out.println(professor);
         }
+
         long ratingId = rs.getInt("rating_id");
         double ratingValue = rs.getDouble("rating_value");
         String remark = rs.getString("remark");
-        System.out.println(new Rating(ratingId, id, ratingValue, remark));
+//        System.out.println(new Rating(ratingId, id, ratingValue, remark));
         ratings.add(new Rating(ratingId, id, ratingValue, remark));
       }
       if (professor != null) {
         professor.setRatings(ratings);
+        professor.setSameDepartmentProfessors(fetchProfessorsByDepartment(professor.getDepartment(), professor.getId()));
+        boolean success = updateRating(professor.getRating(), professor.getId());
+//        System.out.println(success);
       }
     }
     return professor;
+  }
+
+  public static List<Professor> fetchProfessorsByDepartment(String department, long excludeId) throws SQLException {
+    String query = "SELECT * FROM professors WHERE department = ? AND id != ?";
+    List<Professor> results = new ArrayList<>();
+    try (Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setString(1, department);
+      stmt.setLong(2, excludeId);
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          long id = rs.getLong("id");
+          String name = rs.getString("name");
+          String dept = rs.getString("department");
+          results.add(new Professor(id, name, dept));
+        }
+      }
+    }
+    return results;
   }
 
   /**
@@ -96,6 +118,21 @@ public class Professor {
     this.ratings = ratings;
   }
 
+  private void setSameDepartmentProfessors(List<Professor> sameDepartmentProfessors) {
+    this.professorsInOtherDepartments = sameDepartmentProfessors;
+  }
+
+  // TODO: Update rating to database
+  public static boolean updateRating(double rating, long id) throws SQLException {
+    String query = "UPDATE professors SET rating = ? WHERE id = ?";
+    try (Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setDouble(1, rating);
+      stmt.setLong(2, id);
+      int affectedRows = stmt.executeUpdate();
+      return affectedRows > 0;
+    }
+  }
 
   @Override
   public String toString() {
@@ -125,5 +162,9 @@ public class Professor {
 
   public List<Rating> getRatings() {
     return ratings;
+  }
+
+  public List<Professor> getProfessorsInOtherDepartments() {
+    return professorsInOtherDepartments;
   }
 }
