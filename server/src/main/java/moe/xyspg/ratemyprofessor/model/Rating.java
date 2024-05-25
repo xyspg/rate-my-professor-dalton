@@ -4,6 +4,7 @@ import moe.xyspg.ratemyprofessor.service.DatabaseUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Rating {
@@ -23,6 +24,10 @@ public class Rating {
     return rating;
   }
 
+  public Long getId() {
+    return id;
+  }
+
   @Override
   public String toString() {
     return "Rating{" +
@@ -33,10 +38,6 @@ public class Rating {
         '}';
   }
 
-  public Long getId() {
-    return id;
-  }
-
   public Long getProfessorId() {
     return professorId;
   }
@@ -45,6 +46,19 @@ public class Rating {
     return remark;
   }
 
+  public static void createRating(Rating rating) throws SQLException {
+    String query = "INSERT INTO ratings (professor_id, rating, remark) VALUES (?, ?, ?)";
+    try (Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setLong(1, rating.getProfessorId());
+      stmt.setDouble(2, rating.getRating());
+      stmt.setString(3, rating.getRemark());
+      int affectedRows = stmt.executeUpdate();
+      if (affectedRows == 0) {
+        throw new SQLException("Creating rating failed, no rows affected.");
+      }
+    }
+  }
   public static boolean updateRating(Rating rating) throws SQLException {
     String query = "UPDATE ratings SET rating = ?, remark = ? WHERE id = ?";
     try (Connection conn = DatabaseUtil.getConnection();
