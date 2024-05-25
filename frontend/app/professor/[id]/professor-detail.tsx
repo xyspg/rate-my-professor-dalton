@@ -5,7 +5,7 @@ import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import Link from "next/link";
 
-interface ProfessorDetailProps extends HTMLDivElement {
+interface ProfessorDetailProps extends React.HTMLAttributes<HTMLDivElement> {
     data: Professor;
 }
 const ProfessorDetail = ({ data }: ProfessorDetailProps) => {
