@@ -6,16 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/ratings")
 public class RatingController {
 
-  @PutMapping(value = "/update", produces = "application/json")
-  public boolean updateRating(@RequestBody Rating rating) {
-    try {
-      return Rating.updateRating(rating);
-    } catch (SQLException e) {
-      e.printStackTrace();
-      return false;
-    }
+  @PostMapping(value = "/update", produces = "application/json")
+  public void createRating(@RequestBody Rating rating) throws SQLException{
+    Rating.createRating(rating);
   }
 }
