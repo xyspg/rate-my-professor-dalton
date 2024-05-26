@@ -16,7 +16,7 @@ const ProfessorList = async () => {
                     </CardHeader>
                     <CardContent className='flex flex-row gap-1 items-center min-w-40'>
                         <FaStar />
-                        <p>5.0</p>
+                        <p>professor.rating</p>
                     </CardContent>
                 </Card>
             ))}
